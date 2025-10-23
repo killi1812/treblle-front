@@ -12,6 +12,7 @@
     "lint": "eslint . --fix"
   },
   "dependencies": {
+    "@ark-ui/vue": "^5.26.2",
     "@discord/embedded-app-sdk": "^2.4.0",
     "@fontsource/roboto": "5.2.7",
     "@mdi/font": "7.4.47",

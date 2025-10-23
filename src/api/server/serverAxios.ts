@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const HOST_URL = "/.proxy/api";
+const HOST_URL = "/api";
 const serverApi = axios.create({
   baseURL: HOST_URL,
   headers: {

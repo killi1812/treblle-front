@@ -1,0 +1,184 @@
+/* Apply styles to the whole app or a specific container */
+:deep(.v-application) {
+  /* background: linear-gradient(135deg, #1a0b36, #0e0e23); */
+  /* Basic dark background - replace with gradient if desired */
+  background-color: #12121c;
+  color: #e0e0e0;
+  /* Light text color */
+}
+
+/* Style the main container - adjust as needed */
+:deep(.v-container) {
+  /* Add padding if needed */
+}
+
+/* Style the filter card */
+:deep(.v-card.filter-card) {
+  /* Add class="filter-card" to your filter v-card */
+  background-color: rgba(30, 30, 50, 0.7);
+  /* Dark semi-transparent */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  /* Rounded corners */
+  margin-bottom: 24px;
+}
+
+/* Style filter inputs and selects */
+:deep(.filter-card .v-text-field),
+:deep(.filter-card .v-select) {
+  /* Adjust input field styles if needed */
+  --v-input-control-height: 40px;
+  /* Make inputs shorter */
+  --v-input-padding-top: 8px;
+}
+
+:deep(.filter-card .v-field__input) {
+  min-height: 40px;
+  /* Ensure input height */
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+:deep(.filter-card .v-label.v-field-label) {
+  top: 10px;
+  /* Adjust label position */
+  font-size: 0.9em;
+}
+
+/* Style the main data table or list items */
+/* If using v-data-table-server */
+:deep(.v-data-table-server) {
+  background-color: transparent !important;
+  /* Make table background transparent */
+}
+
+:deep(.v-data-table-server > .v-table__wrapper > table > tbody > tr) {
+  background-color: rgba(30, 30, 50, 0.6) !important;
+  /* Dark row background */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  margin-bottom: 8px;
+  /* Spacing between rows (might need display:block) */
+  border-radius: 6px;
+  /* Rounded rows */
+}
+
+:deep(.v-data-table-server > .v-table__wrapper > table > tbody > tr:hover) {
+  background-color: rgba(45, 45, 70, 0.8) !important;
+  /* Slightly lighter on hover */
+}
+
+:deep(.v-data-table-server > .v-table__wrapper > table > thead > tr) {
+  background-color: transparent !important;
+  color: #aaa;
+  /* Lighter header text */
+}
+
+:deep(.v-data-table-server > .v-table__wrapper > table > thead th) {
+  color: #b0b0b0 !important;
+  /* Header text color */
+  font-size: 0.85em;
+  text-transform: uppercase;
+}
+
+:deep(.v-data-table-server .v-chip) {
+  height: 24px;
+  font-size: 0.8em;
+  padding: 0 8px;
+}
+
+
+/* --- Chip Colors --- */
+/* (Keep your existing getMethodColor/getResponseColor logic in Vue) */
+
+/* General Chip styling */
+:deep(.v-chip) {
+  color: #ffffff !important;
+  /* Ensure text is white */
+  font-weight: 500;
+  border-radius: 4px;
+  /* Slightly less rounded */
+}
+
+/* Example color overrides if needed directly in CSS */
+:deep(.v-chip.bg-green) {
+  background-color: #28a745 !important;
+}
+
+:deep(.v-chip.bg-blue) {
+  background-color: #007bff !important;
+}
+
+:deep(.v-chip.bg-orange) {
+  background-color: #fd7e14 !important;
+}
+
+:deep(.v-chip.bg-red) {
+  background-color: #dc3545 !important;
+}
+
+:deep(.v-chip.bg-purple) {
+  background-color: #6f42c1 !important;
+}
+
+:deep(.v-chip.bg-grey) {
+  background-color: #6c757d !important;
+}
+
+:deep(.v-chip.bg-teal) {
+  background-color: #20c997 !important;
+}
+
+
+/* --- Pagination --- */
+:deep(.v-pagination .v-pagination__list .v-pagination__item--is-active .v-btn) {
+  background-color: #5845f0 !important;
+  /* Active pagination button color */
+  color: white !important;
+}
+
+:deep(.v-pagination .v-pagination__list .v-btn) {
+  color: #e0e0e0;
+  /* Default pagination button color */
+}
+
+/* Adjust text colors for readability */
+:deep(body),
+:deep(h1),
+:deep(label),
+:deep(td),
+:deep(th) {
+  color: #e0e0e0;
+}
+
+:deep(.text-disabled) {
+  color: #888 !important;
+}
+
+/* Style specific elements like path text */
+:deep(td:has(span.path-text)) {
+  /* Add class="path-text" to the path span if needed */
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.95em;
+}
+
+/* Style latency/time text */
+:deep(td:has(span.meta-info)) {
+  /* Add class="meta-info" to spans with latency/time */
+  color: #aaa;
+  font-size: 0.9em;
+}
+
+/* --- Optional: If using Cards instead of Table Rows --- */
+/* Add class="request-card" to each v-card representing a request */
+:deep(.request-card) {
+  background-color: rgba(30, 30, 50, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  margin-bottom: 12px;
+  padding: 12px 16px;
+  /* Add flex layout inside the card if needed */
+}
+
+:deep(.request-card:hover) {
+  background-color: rgba(45, 45, 70, 0.8);
+}

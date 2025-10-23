@@ -85,17 +85,15 @@ export default defineConfig({
   },
   server: {
     port: 8091,
-    allowedHosts: ['.trycloudflare.com'],
+    allowedHosts: ['.trycloudflare.com', '.francvok.from.hr'],
     proxy: {
       '/api': {
+        // TODO: chenge to app port
         target: 'http://localhost:8090',
         changeOrigin: true,
         secure: false,
         ws: true,
       },
-    },
-    hmr: {
-      clientPort: 443,
     },
   },
 })

@@ -1,21 +1,89 @@
 <template>
+  <v-container fluid class="pa-8">
+    <!-- Filter Section -->
+    <v-card class="mb-6 pa-4" outlined>
+      <v-row dense align="center">
+        <!-- Date Range -->
+        <v-col cols="12" md="3" sm="6">
+          <v-text-field v-model="filters.startDate" label="Start Date" type="datetime-local" dense outlined hide-details
+            clearable></v-text-field>
+        </v-col>
+        <v-col cols="12" md="3" sm="6">
+          <v-text-field v-model="filters.endDate" label="End Date" type="datetime-local" dense outlined hide-details
+            clearable></v-text-field>
+        </v-col>
+
+        <!-- Method Select -->
+        <v-col cols="12" md="2" sm="4">
+          <v-select v-model="filters.method" :items="methodOptions" label="Method" dense outlined hide-details
+            clearable></v-select>
+        </v-col>
+
+        <!-- Response Select -->
+        <v-col cols="12" md="2" sm="4">
+          <!-- TODO: input number -->
+          <v-select v-model="filters.response" :items="responseOptions" item-title="text" item-value="value"
+            label="Response" dense outlined hide-details clearable></v-select>
+        </v-col>
+
+        <!-- Search -->
+        <v-col cols="12" md="2" sm="4">
+          <v-text-field v-model="filters.search" label="Search Path" prepend-inner-icon="mdi-magnify" dense outlined
+            hide-details clearable @keydown.enter="applyFilters"></v-text-field>
+        </v-col>
+
+        <!-- Apply Button -->
+        <v-col cols="12" class="text-right">
+          <v-btn color="primary" @click="applyFilters" :loading="loading">
+            Apply Filters
+          </v-btn>
+          <v-btn variant="text" @click="clearFilters" class="ml-2">
+            Clear
+          </v-btn>
+        </v-col>
+      </v-row>
+    </v-card>
+
+    <!-- Data Table -->
+    <v-data-table-server v-model:items-per-page="options.itemsPerPage" v-model:page="options.page"
+      v-model:sort-by="options.sortBy" :headers="headers" :items="requests" :items-length="totalRequests"
+      :loading="loading" class="elevation-1" item-value="id" @update:options="loadItems">
+      <template v-slot:item.method="{ item }">
+        <v-chip :color="getMethodColor(item.method)" dark small>
+          {{ item.method }}
+        </v-chip>
+      </template>
+
+      <template v-slot:item.response="{ item }">
+        <v-chip :color="getResponseColor(item.response)" dark small>
+          {{ item.response }}
+        </v-chip>
+      </template>
+
+      <template v-slot:item.latency="{ item }">
+        {{ item.latency }} ms
+      </template>
+
+      <template v-slot:item.createdAt="{ item }">
+        {{ formatDateTime(item.createdAt) }}
+      </template>
+
+      <template v-slot:loading>
+        <v-skeleton-loader type="table-row@10"></v-skeleton-loader>
+      </template>
+
+    </v-data-table-server>
+  </v-container>
 </template>
 
 <script setup lang="ts">
-import { ref, watch, reactive } from 'vue';
-import serverApi from '@/api/server/serverAxios'; // Adjust the import path as needed
-import type { RequestsDto, ResDataDto } from '@/dto/resDataDto';
-import type { VDataTableHeaders, VDataTableServer } from 'vuetify/components';
+import { GetRequests, type TableOptions } from '@/api/server/requests';
+import type { RequestsDto } from '@/dto/resDataDto';
+import { reactive, ref } from 'vue';
+import type { VDataTableServer } from 'vuetify/components';
 
 
 // Types for table options
-type SortItem = { key: string; order: 'asc' | 'desc' };
-type TableOptions = {
-  page: number;
-  itemsPerPage: number;
-  sortBy: SortItem[];
-};
-
 // --- Refs and Reactive State ---
 
 const requests = ref<RequestsDto[]>([]);
@@ -41,11 +109,12 @@ const options = ref<TableOptions>({
 // --- Table Headers ---
 
 const headers = [
-  { title: 'Method', key: 'method', sortable: true, width: '10%' },
-  { title: 'Response', key: 'response', sortable: true, width: '10%' },
-  { title: 'Path', key: 'path', sortable: true, width: '40%' },
-  { title: 'Response Time (ms)', key: 'latency', sortable: true, width: '15%' },
-  { title: 'Created At', key: 'createdAt', sortable: true, width: '25%' },
+  { title: 'Method', key: 'method', sortable: false, width: '5%' },
+  { title: 'Response', key: 'response', sortable: false, width: '5%' },
+  { title: 'Path', key: 'path', sortable: false, width: '30%' },
+  { title: 'Response Time (ms)', key: 'latency', sortable: true, width: '5%' },
+  { title: 'Created At', key: 'createdAt', sortable: true, width: '24%' },
+  { title: 'Response At', key: 'responseTime', sortable: true, width: '24%' },
 ];
 
 // --- Filter Options ---
@@ -53,8 +122,8 @@ const headers = [
 const methodOptions: string[] = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS', 'HEAD'];
 const responseOptions = [
   { text: 'Any', value: null },
-  { text: '2xx Success', value: 200 }, // Representing ranges might need backend support
-  { text: '3xx Redirection', value: 300 }, // or adjust filtering logic here/backend
+  { text: '2xx Success', value: 200 },
+  { text: '3xx Redirection', value: 300 },
   { text: '4xx Client Error', value: 400 },
   { text: '5xx Server Error', value: 500 },
   // You could add specific codes too: { text: '404 Not Found', value: 404 }
@@ -67,53 +136,9 @@ const responseOptions = [
 const loadItems = async () => {
   loading.value = true;
   try {
-    const params = new URLSearchParams();
-
-    // Pagination
-    params.append('limit', String(options.value.itemsPerPage));
-    params.append('offset', String((options.value.page - 1) * options.value.itemsPerPage));
-
-    // Sorting
-    if (options.value.sortBy.length > 0) {
-      params.append('sort_by', options.value.sortBy[0]?.key ?? "");
-      params.append('order', options.value.sortBy[0]?.order ?? "");
-    } else {
-      // Default sort if user clears sorting
-      params.append('sort_by', 'createdAt');
-      params.append('order', 'desc');
-    }
-
-    // Filters
-    if (filters.search) params.append('search', filters.search);
-    if (filters.method) params.append('method', filters.method);
-
-    // Handle response code filtering (adjust if backend handles ranges differently)
-    if (filters.response !== null) {
-      if (filters.response === 200) { // Example: Treat 200 as 2xx range start
-        // Need backend support for range like response_gte=200&response_lt=300
-        // For now, just sending the base code
-        params.append('response', String(filters.response));
-      } else if (filters.response === 300) {
-        params.append('response', String(filters.response)); // Adjust for 3xx range
-      } else if (filters.response === 400) {
-        params.append('response', String(filters.response)); // Adjust for 4xx range
-      } else if (filters.response === 500) {
-        params.append('response', String(filters.response)); // Adjust for 5xx range
-      } else {
-        params.append('response', String(filters.response)); // Specific code
-      }
-    }
-    // TODO: Add date range filtering - requires backend support
-    if (filters.startDate) params.append('start_time', filters.startDate); // Adjust param name
-    if (filters.endDate) params.append('end_time', filters.endDate);     // Adjust param name
-
-
-    //const response = await serverApi.get<ResDataDto>('/requests', { params });
-    const response = await serverApi.get<ResDataDto>('/requests');
-
-    requests.value = response.data.data || [];
-    totalRequests.value = response.data.pagination?.total || 0;
-
+    const rez = await GetRequests(options.value, filters)
+    requests.value = rez.data
+    totalRequests.value = rez.pagination.total
   } catch (error) {
     console.error("Failed to load requests:", error);
     // TODO: Show error message to user (e.g., using a snackbar)
