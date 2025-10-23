@@ -26,8 +26,9 @@
       <v-divider></v-divider>
       <!-- Navigations -->
       <IconListItem to="/data/search" icon="mdi-list-box" tooltip-text="Search" :show-tooltip="!open">
-        HOME
+        SEARCH
       </IconListItem>
+      <v-divider></v-divider>
       <!-- Navigations  -->
       <IconListItem to="/help/help" icon="mdi-help-circle" tooltip-text="Help" :show-tooltip="!open">
         HELP
