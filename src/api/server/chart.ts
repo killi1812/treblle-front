@@ -1,21 +1,21 @@
+import type { RequestStatistics } from '@/dto/statisticsDto';
 import type { LobbyMessage } from '@/models/server/LobbyMessage';
-import type { LobbyState } from '@/models/server/LobbyState';
 import { ref } from 'vue';
 
 // Determine WebSocket protocol based on window location protocol
 const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-const WS_URL = `${protocol}//${window.location.host}/api/ws/lobby`;
+const WS_URL = `${protocol}//${window.location.host}/api/requests/statistics/ws`;
 
 /**
  * Manages the WebSocket connection to the game lobby server.
  * It handles connecting, disconnecting, sending messages, and maintaining the real-time state of the lobby.
  * This service is implemented as a singleton to ensure only one WebSocket connection is active at a time.
  */
-class LobbySocketService {
+class ChartSocketService {
   /** The WebSocket instance. Null if not connected. */
   private socket: WebSocket | null = null;
   /** A reactive reference to the current state of the lobby, including players and spectators. */
-  public lobbyState = ref<LobbyState>({ players: Array(4).fill(null), spectators: [] });
+  public stats = ref<RequestStatistics[]>();
   /** A reactive boolean indicating the current connection status of the WebSocket. */
   public isConnected = ref(false);
 
@@ -24,14 +24,14 @@ class LobbySocketService {
    * Establishes a WebSocket connection to the server and sets up event listeners
    * for open, message, close, and error events.
    */
-  public connect(lobbyId: string) {
+  public connect() {
     // Avoid multiple connections
     if (this.socket && this.socket.readyState === WebSocket.OPEN) {
       console.log('WebSocket is already connected.');
       return;
     }
 
-    this.socket = new WebSocket(`${WS_URL}//${lobbyId}`);
+    this.socket = new WebSocket(`${WS_URL}`);
 
     this.socket.onopen = () => {
       console.log('WebSocket connected to lobby');
@@ -40,9 +40,8 @@ class LobbySocketService {
 
     this.socket.onmessage = (event) => {
       try {
-        const state: LobbyState = JSON.parse(event.data);
-        // The Go server sends `null` for empty player slots, which is correct.
-        this.lobbyState.value = state;
+        const state: RequestStatistics = JSON.parse(event.data);
+        this.stats.value?.push(state)
       } catch (error) {
         console.error('Error parsing lobby state:', error);
       }
@@ -71,6 +70,10 @@ class LobbySocketService {
     }
   }
 
+  public refresh() {
+    this.sendMessage({ action: "refresh" })
+  }
+
   /**
    * Closes the WebSocket connection if it is open.
    */
@@ -82,6 +85,6 @@ class LobbySocketService {
 }
 
 // Export a singleton instance of the service to be used throughout the application.
-export const lobbySocketService = new LobbySocketService();
+export const chartSocketService = new ChartSocketService();
 
 

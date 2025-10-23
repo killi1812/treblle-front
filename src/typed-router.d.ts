@@ -21,7 +21,6 @@ declare module 'vue-router/auto-routes' {
     '/': RouteRecordInfo<'/', '/', Record<never, never>, Record<never, never>>,
     '/data/chart': RouteRecordInfo<'/data/chart', '/data/chart', Record<never, never>, Record<never, never>>,
     '/data/search': RouteRecordInfo<'/data/search', '/data/search', Record<never, never>, Record<never, never>>,
-    '/game/lobby': RouteRecordInfo<'/game/lobby', '/game/lobby', Record<never, never>, Record<never, never>>,
     '/help/about': RouteRecordInfo<'/help/about', '/help/about', Record<never, never>, Record<never, never>>,
     '/help/help': RouteRecordInfo<'/help/help', '/help/help', Record<never, never>, Record<never, never>>,
   }
@@ -47,10 +46,6 @@ declare module 'vue-router/auto-routes' {
     }
     'src/pages/data/search.vue': {
       routes: '/data/search'
-      views: never
-    }
-    'src/pages/game/lobby.vue': {
-      routes: '/game/lobby'
       views: never
     }
     'src/pages/help/about.vue': {
