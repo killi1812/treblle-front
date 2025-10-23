@@ -8,13 +8,6 @@
       <v-icon>mdi-arrow-left</v-icon>
     </v-btn>
 
-    <v-menu location="bottom">
-      <template v-slot:activator="{ props }">
-        <v-btn icon v-bind="props">
-          <v-icon> mdi-account-circle </v-icon>
-        </v-btn>
-      </template>
-    </v-menu>
   </v-app-bar>
 
   <v-navigation-drawer class="offset" :rail="!open" rail-width="60" location="left" permanent persistent elevation="2">
@@ -24,7 +17,7 @@
       <v-list-item v-show="open" readonly>INFORMATION</v-list-item>
       <v-divider></v-divider>
       <!-- Navigations -->
-      <IconListItem to="/" icon="mdi-home" tooltip-text="START.DASHBOARD" :show-tooltip="!open">
+      <IconListItem to="/" icon="mdi-home" tooltip-text="Dashboard" :show-tooltip="!open">
         HOME
       </IconListItem>
       <!-- Master Data section -->
@@ -32,14 +25,14 @@
       <v-list-item v-show="open" readonly>MASTER_DATA</v-list-item>
       <v-divider></v-divider>
       <!-- Navigations -->
-      <IconListItem to="/data/search" icon="mdi-list-box" tooltip-text="START.search" :show-tooltip="!open">
+      <IconListItem to="/data/search" icon="mdi-list-box" tooltip-text="Search" :show-tooltip="!open">
         HOME
       </IconListItem>
       <!-- Navigations  -->
-      <IconListItem to="/help/help" icon="mdi-help-circle" tooltip-text="START.HELP" :show-tooltip="!open">
+      <IconListItem to="/help/help" icon="mdi-help-circle" tooltip-text="Help" :show-tooltip="!open">
         HELP
       </IconListItem>
-      <IconListItem to="/help/about" icon="mdi-information" tooltip-text="START.ABOUT" :show-tooltip="!open">
+      <IconListItem to="/help/about" icon="mdi-information" tooltip-text="About" :show-tooltip="!open">
         ABOUT
       </IconListItem>
     </v-list>

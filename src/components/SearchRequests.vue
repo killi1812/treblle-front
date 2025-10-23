@@ -218,9 +218,4 @@ const formatDateTime = (dateTimeString: string): string => {
 
 </script>
 
-<style scoped>
-/* Add any specific styles if needed */
-.v-data-table-server {
-  /* Potential style adjustments */
-}
-</style>
+<style scoped></style>
