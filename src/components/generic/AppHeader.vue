@@ -13,28 +13,28 @@
   <v-navigation-drawer class="offset" :rail="!open" rail-width="60" location="left" permanent persistent elevation="2">
     <v-list nav>
       <!-- Information section -->
-      <!-- Title -->
-      <v-list-item v-show="open" readonly>INFORMATION</v-list-item>
+      <v-list-item v-show="open" readonly>Information</v-list-item>
       <v-divider></v-divider>
-      <!-- Navigations -->
       <IconListItem to="/" icon="mdi-home" tooltip-text="Dashboard" :show-tooltip="!open">
-        HOME
+        Home
       </IconListItem>
       <!-- Master Data section -->
-      <!-- Title -->
-      <v-list-item v-show="open" readonly>MASTER_DATA</v-list-item>
+      <v-list-item v-show="open" readonly>Master Data</v-list-item>
       <v-divider></v-divider>
-      <!-- Navigations -->
       <IconListItem to="/data/search" icon="mdi-list-box" tooltip-text="Search" :show-tooltip="!open">
-        SEARCH
+        Search
       </IconListItem>
+      <IconListItem to="/data/chart" icon="mdi-chart-box" tooltip-text="Chart" :show-tooltip="!open">
+        Chart
+      </IconListItem>
+      <!-- Master Data section -->
+      <v-list-item v-show="open" readonly>Information</v-list-item>
       <v-divider></v-divider>
-      <!-- Navigations  -->
       <IconListItem to="/help/help" icon="mdi-help-circle" tooltip-text="Help" :show-tooltip="!open">
-        HELP
+        Help
       </IconListItem>
       <IconListItem to="/help/about" icon="mdi-information" tooltip-text="About" :show-tooltip="!open">
-        ABOUT
+        About
       </IconListItem>
     </v-list>
   </v-navigation-drawer>
