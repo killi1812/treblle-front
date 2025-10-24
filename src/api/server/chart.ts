@@ -4,7 +4,7 @@ import { ref } from 'vue';
 
 // Determine WebSocket protocol based on window location protocol
 const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-const WS_URL = `${protocol}//${window.location.host}/api/requests/statistics/ws`;
+const WS_URL = `${protocol}//${window.location.host}/api/ws/requests/statistics`;
 
 /**
  * Manages the WebSocket connection to the game lobby server.

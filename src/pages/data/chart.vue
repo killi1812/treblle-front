@@ -1,7 +1,8 @@
 <template>
   <v-container>
-    <h1 class="mb-4">Realtime Request Statistics</h1>
-
+    <h1 class="mb-4">Realtime Request Statistics
+      <v-btn icon="mdi-refresh" @click="chartSocketService.refresh()" />
+    </h1>
     <v-row>
       <!-- Latency Chart -->
       <v-col cols="12">
@@ -23,6 +24,8 @@
         </v-card>
       </v-col>
     </v-row>
+
+    <!-- request Counts Chart -->
   </v-container>
 </template>
 
